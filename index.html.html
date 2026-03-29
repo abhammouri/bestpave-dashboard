@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BestPave — Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f3ef;
+  --surface: #ffffff;
+  --surface2: #f0ede8;
+  --border: #e2ddd6;
+  --border-dark: #c8c2b8;
+  --asphalt: #1c1c1e;
+  --asphalt-mid: #2e2e32;
+  --gold: #b8893a;
+  --gold-light: #d4a855;
+  --gold-pale: #f5e9d4;
+  --text: #1c1c1e;
+  --text-mid: #4a4a52;
+  --text-muted: #8a8880;
+  --green: #2d6a4f;
+  --green-light: #d8f3dc;
+  --orange: #b5451b;
+  --orange-light: #fde8df;
+  --blue: #1d4e89;
+  --blue-light: #dbeafe;
+  --red: #9b2335;
+  --red-light: #fde8ec;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg: 0 2px 8px rgba(0,0,0,.08), 0 12px 40px rgba(0,0,0,.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  background: var(--asphalt);
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-mark {
+  width: 28px; height: 28px;
+  background: var(--gold);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800;
+  color: white;
+  letter-spacing: -0.5px;
+}
+.brand-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.brand-divider {
+  width: 1px; height: 16px;
+  background: rgba(255,255,255,.15);
+  margin: 0 12px;
+}
+.brand-sub {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topbar-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+  letter-spacing: .5px;
+}
+.topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.user-avatar {
+  width: 28px; height: 28px;
+  background: var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+.user-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,.75);
+}
+
+/* ── LAYOUT ── */
+.layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - 52px);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow-y: auto;
+}
+.sidebar-section {
+  margin-bottom: 28px;
+}
+.sidebar-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: 0 20px;
+  margin-bottom: 6px;
+}
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all .15s;
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+.sidebar-item:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+.sidebar-item.active {
+  background: var(--gold-pale);
+  color: var(--gold);
+  border-left-color: var(--gold);
+  font-weight: 600;
+}
+.sidebar-item .si-icon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.sidebar-badge {
+  margin-left: auto;
+  background: var(--gold);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+.sidebar-badge.red { background: var(--red); }
+.sidebar-badge.blue { background: var(--blue); }
+
+/* ── MAIN ── */
+.main {
+  padding: 28px 32px;
+  overflow-y: auto;
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.page-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.3px;
+}
+.page-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 3px;
+  letter-spacing: .5px;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all .15s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--asphalt);
+  color: white;
+}
+.btn-primary:hover { background: #333; }
+.btn-outline {
+  background: transparent;
+  color: var(--text-mid);
+  border: 1px solid var(--border-dark);
+}
+.btn-outline:hover { background: var(--surface2); }
+
+/* ── KPI ROW ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-card.gold::before { background: var(--gold); }
+.kpi-card.green::before { background: var(--green); }
+.kpi-card.blue::before { background: var(--blue); }
+.kpi-card.orange::before { background: var(--orange); }
+
+.kpi-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.kpi-value {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.kpi-delta {
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.kpi-delta.up { color: var(--green); }
+.kpi-delta.down { color: var(--red); }
+.kpi-delta.neutral { color: var(--text-muted); }
+.kpi-icon {
+  position: absolute;
+  right: 18px; top: 18px;
+  font-size: 22px;
+  opacity: .12;
+}
+
+/* ── GRID SECTIONS ── */
+.grid-main {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.grid-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.card-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: .2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title-icon {
+  font-size: 14px;
+}
+.card-action {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  cursor: pointer;
+  letter-spacing: .5px;
+  text-decoration: none;
+  font-weight: 500;
+}
+.card-action:hover { text-decoration: underline; }
+.card-body { padding: 0; }
+
+/* ── JOBS TABLE ── */
+.jobs-table { width: 100%; border-collapse: collapse; }
+.jobs-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-align: left;
+  padding: 10px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+}
+.jobs-table td {
+  padding: 11px 20px;
+  font-size: 12px;
+  color: var(--text-mid);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.jobs-table tr:last-child td { border-bottom: none; }
+.jobs-table tr:hover td { background: var(--surface2); }
+.job-name {
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  font-size: 13px;
+}
+.job-addr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .3px;
+  white-space: nowrap;
+}
+.status-pill::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.s-active { background: var(--green-light); color: var(--green); }
+.s-active::before { background: var(--green); }
+.s-proposal { background: var(--blue-light); color: var(--blue); }
+.s-proposal::before { background: var(--blue); }
+.s-scheduled { background: var(--gold-pale); color: var(--gold); }
+.s-scheduled::before { background: var(--gold); }
+.s-closeout { background: var(--orange-light); color: var(--orange); }
+.s-closeout::before { background: var(--orange); }
+.s-invoiced { background: #f0f4ff; color: #5b4fcf; }
+.s-invoiced::before { background: #5b4fcf; }
+
+.progress-bar {
+  width: 80px;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--gold);
+  transition: width .3s;
+}
+
+/* ── LAUNCHER TILES ── */
+.launcher-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 16px;
+}
+.launcher-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 10px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  background: var(--surface2);
+  position: relative;
+  overflow: hidden;
+}
+.launcher-tile:hover {
+  border-color: var(--gold);
+  background: var(--gold-pale);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(184,137,58,.15);
+}
+.launcher-tile:hover .lt-icon { transform: scale(1.1); }
+.lt-icon {
+  font-size: 24px;
+  transition: transform .2s;
+}
+.lt-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  letter-spacing: .3px;
+}
+.lt-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: .5px;
+  text-align: center;
+}
+.lt-badge {
+  position: absolute;
+  top: 7px; right: 7px;
+  background: var(--red);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 500;
+  padding: 1px 5px;
+  border-radius: 6px;
+}
+
+/* ── PIPELINE ── */
+.pipeline-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+  cursor: pointer;
+}
+.pipeline-item:last-child { border-bottom: none; }
+.pipeline-item:hover { background: var(--surface2); }
+.pi-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pi-info { flex: 1; min-width: 0; }
+.pi-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pi-stage {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.pi-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+}
+.pi-days {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ── ACTIVITY FEED ── */
+.activity-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.activity-content { flex: 1; }
+.activity-text {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.activity-text strong { color: var(--text); }
+.activity-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* ── SUB ROSTER ── */
+.sub-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.sub-item:last-child { border-bottom: none; }
+.sub-item:hover { background: var(--surface2); }
+.sub-avatar {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--asphalt);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+.sub-info { flex: 1; min-width: 0; }
+.sub-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.sub-trade {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+.sub-rating {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 700;
+}
+.sub-tier {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+.tier-preferred { background: var(--green-light); color: var(--green); }
+.tier-active { background: var(--blue-light); color: var(--blue); }
+.tier-probation { background: var(--orange-light); color: var(--orange); }
+
+/* ── DOCS QUICK ACCESS ── */
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .15s;
+  text-decoration: none;
+}
+.doc-item:last-child { border-bottom: none; }
+.doc-item:hover { background: var(--surface2); }
+.doc-icon {
+  width: 30px; height: 30px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.doc-info { flex: 1; }
+.doc-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.doc-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+.doc-arrow {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ── ANNOUNCEMENTS ── */
+.announcement {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+}
+.announcement:last-child { border-bottom: none; }
+.ann-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.ann-body {
+  font-size: 11px;
+  color: var(--text-mid);
+  line-height: 1.5;
+}
+.ann-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 5px;
+}
+
+/* ── WEATHER STRIP ── */
+.weather-strip {
+  background: var(--asphalt);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.weather-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.weather-icon { font-size: 28px; }
+.weather-info .temp {
+  font-size: 22px;
+  font-weight: 800;
+  color: white;
+  line-height: 1;
+}
+.weather-info .condition {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,.5);
+  letter-spacing: .5px;
+  margin-top: 2px;
+}
+.weather-right {
+  text-align: right;
+}
+.weather-city {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,.75);
+}
+.weather-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,.35);
+  margin-top: 2px;
+}
+.weather-field-tag {
+  display: inline-block;
+  background: var(--green);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.kpi-card { animation: fadeUp .4s ease both; }
+.kpi-card:nth-child(1) { animation-delay: .05s; }
+.kpi-card:nth-child(2) { animation-delay: .1s; }
+.kpi-card:nth-child(3) { animation-delay: .15s; }
+.kpi-card:nth-child(4) { animation-delay: .2s; }
+.card { animation: fadeUp .4s ease both; animation-delay: .25s; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .grid-main { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 16px; }
+  .grid-bottom { grid-template-columns: 1fr; }
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-mark">BP</div>
+    <div class="brand-name">BestPave</div>
+    <div class="brand-divider"></div>
+    <div class="brand-sub">Command Center</div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-date" id="live-date"></div>
+    <div class="topbar-user">
+      <div class="user-avatar">AB</div>
+      <div class="user-name">AB Alhammouri</div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a class="sidebar-item active" href="#">
+        <span class="si-icon">⊞</span> Dashboard
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">🏗️</span> Active Jobs
+        <span class="sidebar-badge">5</span>
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">📊</span> Pipeline
+        <span class="sidebar-badge blue">8</span>
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">📅</span> Schedule
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Tools</div>
+      <a class="sidebar-item" href="https://app.hubspot.com" target="_blank">
+        <span class="si-icon">🎯</span> HubSpot CRM
+      </a>
+      <a class="sidebar-item" href="https://spotonsiteapp.com" target="_blank">
+        <span class="si-icon">🗺️</span> SpotOnSite
+      </a>
+      <a class="sidebar-item" href="https://app.clickup.com" target="_blank">
+        <span class="si-icon">✅</span> ClickUp
+      </a>
+      <a class="sidebar-item" href="https://qbo.intuit.com" target="_blank">
+        <span class="si-icon">💰</span> QuickBooks
+      </a>
+      <a class="sidebar-item" href="https://app.pandadoc.com" target="_blank">
+        <span class="si-icon">📄</span> PandaDoc
+      </a>
+      <a class="sidebar-item" href="https://onedrive.live.com" target="_blank">
+        <span class="si-icon">☁️</span> OneDrive
+      </a>
+      <a class="sidebar-item" href="https://app.companycam.com" target="_blank">
+        <span class="si-icon">📸</span> CompanyCam
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Management</div>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">🤝</span> Sub Roster
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">🧾</span> Invoices
+        <span class="sidebar-badge red">2</span>
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">📁</span> Job Files
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">📈</span> Reports
+      </a>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Settings</div>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">⚙️</span> Settings
+      </a>
+      <a class="sidebar-item" href="#">
+        <span class="si-icon">👥</span> Team
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Good morning, AB 👋</div>
+        <div class="page-subtitle">MONDAY · MARCH 29, 2026 · HOUSTON, TX</div>
+      </div>
+      <div class="header-actions">
+        <a href="#" class="btn btn-outline">+ New Job</a>
+        <a href="#" class="btn btn-primary">+ New Proposal</a>
+      </div>
+    </div>
+
+    <!-- Weather Strip -->
+    <div class="weather-strip">
+      <div class="weather-left">
+        <div class="weather-icon">⛅</div>
+        <div class="weather-info">
+          <div class="temp">78°F</div>
+          <div class="condition">PARTLY CLOUDY · HOUSTON, TX</div>
+        </div>
+      </div>
+      <div class="weather-right">
+        <div class="weather-city">Good paving conditions today</div>
+        <div class="weather-note">Wind 8 mph · Humidity 62% · No rain in forecast</div>
+        <div class="weather-field-tag">✓ FIELD-READY</div>
+      </div>
+    </div>
+
+    <!-- KPI Row -->
+    <div class="kpi-row">
+      <div class="kpi-card gold">
+        <div class="kpi-icon">🏗️</div>
+        <div class="kpi-label">Active Jobs</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-delta up">↑ 2 from last week</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-label">Open Pipeline</div>
+        <div class="kpi-value">$214K</div>
+        <div class="kpi-delta up">↑ $42K this week</div>
+      </div>
+      <div class="kpi-card blue">
+        <div class="kpi-icon">📄</div>
+        <div class="kpi-label">Proposals Out</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-delta neutral">3 follow-ups due</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">🧾</div>
+        <div class="kpi-label">AR Outstanding</div>
+        <div class="kpi-value">$38K</div>
+        <div class="kpi-delta down">2 invoices overdue</div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="grid-main">
+
+      <!-- Active Jobs Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">🏗️</span> Active Jobs Board</div>
+          <a href="https://app.clickup.com" target="_blank" class="card-action">Open in ClickUp →</a>
+        </div>
+        <div class="card-body">
+          <table class="jobs-table">
+            <thead>
+              <tr>
+                <th>Job</th>
+                <th>Status</th>
+                <th>Sub</th>
+                <th>Progress</th>
+                <th>Due</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="job-name">Westpark Plaza</span>
+                  <span class="job-addr">BP-2025-051 · Houston, TX</span>
+                </td>
+                <td><span class="status-pill s-active">Active</span></td>
+                <td style="font-size:12px">RoadKing Paving</td>
+                <td>
+                  <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+                </td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px">Apr 2</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="job-name">Lakewood HOA</span>
+                  <span class="job-addr">BP-2025-050 · Abilene, TX</span>
+                </td>
+                <td><span class="status-pill s-closeout">Closeout</span></td>
+                <td style="font-size:12px">TexPave LLC</td>
+                <td>
+                  <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
+                </td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px">Mar 31</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="job-name">Kroger #4821 Lot</span>
+                  <span class="job-addr">BP-2025-049 · Houston, TX</span>
+                </td>
+                <td><span class="status-pill s-scheduled">Scheduled</span></td>
+                <td style="font-size:12px">FastLine Stripe</td>
+                <td>
+                  <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+                </td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px">Apr 8</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="job-name">Clearview Medical</span>
+                  <span class="job-addr">BP-2025-048 · Houston, TX</span>
+                </td>
+                <td><span class="status-pill s-active">Active</span></td>
+                <td style="font-size:12px">RoadKing Paving</td>
+                <td>
+                  <div class="progress-bar"><div class="progress-fill" style="width:45%"></div></div>
+                </td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px">Apr 5</td>
+              </tr>
+              <tr>
+                <td>
+                  <span class="job-name">Sunrise Apartments</span>
+                  <span class="job-addr">BP-2025-047 · Houston, TX</span>
+                </td>
+                <td><span class="status-pill s-invoiced">Invoiced</span></td>
+                <td style="font-size:12px">TexPave LLC</td>
+                <td>
+                  <div class="progress-bar"><div class="progress-fill" style="width:100%;background:var(--green)"></div></div>
+                </td>
+                <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green)">Done ✓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right Column: Launcher + Pipeline -->
+      <div style="display:flex;flex-direction:column;gap:18px;">
+
+        <!-- Tool Launcher -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-title-icon">🚀</span> Tool Launcher</div>
+          </div>
+          <div class="launcher-grid">
+            <a class="launcher-tile" href="https://app.hubspot.com" target="_blank">
+              <div class="lt-icon">🎯</div>
+              <div class="lt-name">HubSpot</div>
+              <div class="lt-type">CRM</div>
+              <div class="lt-badge">3</div>
+            </a>
+            <a class="launcher-tile" href="https://spotonsiteapp.com" target="_blank">
+              <div class="lt-icon">🗺️</div>
+              <div class="lt-name">SpotOnSite</div>
+              <div class="lt-type">Inspection</div>
+            </a>
+            <a class="launcher-tile" href="#" target="_blank">
+              <div class="lt-icon">🧮</div>
+              <div class="lt-name">Estimator</div>
+              <div class="lt-type">In-House App</div>
+            </a>
+            <a class="launcher-tile" href="https://app.clickup.com" target="_blank">
+              <div class="lt-icon">✅</div>
+              <div class="lt-name">ClickUp</div>
+              <div class="lt-type">Jobs Board</div>
+            </a>
+            <a class="launcher-tile" href="https://qbo.intuit.com" target="_blank">
+              <div class="lt-icon">💰</div>
+              <div class="lt-name">QuickBooks</div>
+              <div class="lt-type">Finance</div>
+              <div class="lt-badge">2</div>
+            </a>
+            <a class="launcher-tile" href="https://app.pandadoc.com" target="_blank">
+              <div class="lt-icon">📄</div>
+              <div class="lt-name">PandaDoc</div>
+              <div class="lt-type">Proposals</div>
+            </a>
+            <a class="launcher-tile" href="https://onedrive.live.com" target="_blank">
+              <div class="lt-icon">☁️</div>
+              <div class="lt-name">OneDrive</div>
+              <div class="lt-type">Documents</div>
+            </a>
+            <a class="launcher-tile" href="https://app.companycam.com" target="_blank">
+              <div class="lt-icon">📸</div>
+              <div class="lt-name">CompanyCam</div>
+              <div class="lt-type">Photos</div>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Grid -->
+    <div class="grid-bottom">
+
+      <!-- Pipeline -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">📊</span> Sales Pipeline</div>
+          <a href="https://app.hubspot.com" target="_blank" class="card-action">Open HubSpot →</a>
+        </div>
+        <div class="card-body">
+          <div class="pipeline-item">
+            <div class="pi-dot" style="background:var(--blue)"></div>
+            <div class="pi-info">
+              <div class="pi-name">Northgate Shopping Ctr</div>
+              <div class="pi-stage">Proposal Sent · Day 3</div>
+            </div>
+            <div>
+              <div class="pi-value">$42,000</div>
+              <div class="pi-days">Follow-up due</div>
+            </div>
+          </div>
+          <div class="pipeline-item">
+            <div class="pi-dot" style="background:var(--gold)"></div>
+            <div class="pi-info">
+              <div class="pi-name">Walgreens Portfolio (3x)</div>
+              <div class="pi-stage">Site Inspection Scheduled</div>
+            </div>
+            <div>
+              <div class="pi-value">$78,000</div>
+              <div class="pi-days">Apr 1</div>
+            </div>
+          </div>
+          <div class="pipeline-item">
+            <div class="pi-dot" style="background:var(--green)"></div>
+            <div class="pi-info">
+              <div class="pi-name">City of Houston – Lot 7</div>
+              <div class="pi-stage">Bid Submitted · SAM.gov</div>
+            </div>
+            <div>
+              <div class="pi-value">$95,000</div>
+              <div class="pi-days">Apr 14 decision</div>
+            </div>
+          </div>
+          <div class="pipeline-item">
+            <div class="pi-dot" style="background:var(--orange)"></div>
+            <div class="pi-info">
+              <div class="pi-name">Sunridge Apartments</div>
+              <div class="pi-stage">Proposal Sent · Day 7</div>
+            </div>
+            <div>
+              <div class="pi-value">$18,500</div>
+              <div class="pi-days">Expires Apr 2</div>
+            </div>
+          </div>
+          <div class="pipeline-item">
+            <div class="pi-dot" style="background:var(--text-muted)"></div>
+            <div class="pi-info">
+              <div class="pi-name">Lone Star Auto Dealership</div>
+              <div class="pi-stage">Contacted · Awaiting Response</div>
+            </div>
+            <div>
+              <div class="pi-value">~$28,000</div>
+              <div class="pi-days">Day 2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sub Roster -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">🤝</span> Sub Roster</div>
+          <a href="#" class="card-action">Full Roster →</a>
+        </div>
+        <div class="card-body">
+          <div class="sub-item">
+            <div class="sub-avatar">RK</div>
+            <div class="sub-info">
+              <div class="sub-name">RoadKing Paving</div>
+              <div class="sub-trade">Asphalt · Active on 2 jobs</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sub-rating">★ 4.9</div>
+              <div class="sub-tier tier-preferred">PREFERRED</div>
+            </div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-avatar">TP</div>
+            <div class="sub-info">
+              <div class="sub-name">TexPave LLC</div>
+              <div class="sub-trade">Asphalt / Concrete</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sub-rating">★ 4.6</div>
+              <div class="sub-tier tier-preferred">PREFERRED</div>
+            </div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-avatar">FL</div>
+            <div class="sub-info">
+              <div class="sub-name">FastLine Stripe Co.</div>
+              <div class="sub-trade">Striping · Scheduled Apr 8</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sub-rating">★ 4.4</div>
+              <div class="sub-tier tier-active">ACTIVE</div>
+            </div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-avatar">HC</div>
+            <div class="sub-info">
+              <div class="sub-name">Houston Concrete Co.</div>
+              <div class="sub-trade">Concrete Flatwork</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sub-rating">★ 3.8</div>
+              <div class="sub-tier tier-active">ACTIVE</div>
+            </div>
+          </div>
+          <div class="sub-item">
+            <div class="sub-avatar">CS</div>
+            <div class="sub-info">
+              <div class="sub-name">CrackSeal Pro</div>
+              <div class="sub-trade">Crack Seal / Sealcoat</div>
+            </div>
+            <div style="text-align:right">
+              <div class="sub-rating">★ 3.2</div>
+              <div class="sub-tier tier-probation">PROBATION</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Third Row -->
+    <div class="grid-bottom">
+
+      <!-- Recent Activity -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><span class="card-title-icon">⚡</span> Activity Feed</div>
+          <a href="#" class="card-action">View All →</a>
+        </div>
+        <div class="card-body">
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--green-light)">✅</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Lakewood HOA</strong> — QC walk completed. Punch list cleared. Awaiting client signature.</div>
+              <div class="activity-time">Today, 9:14 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--blue-light)">📄</div>
+            <div class="activity-content">
+              <div class="activity-text">Proposal sent to <strong>Northgate Shopping Ctr</strong> — $42,000 asphalt mill & overlay.</div>
+              <div class="activity-time">Today, 8:02 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--gold-pale)">🗺️</div>
+            <div class="activity-content">
+              <div class="activity-text">Site inspection completed — <strong>Walgreens Portfolio</strong> via SpotOnSite. 3 locations logged.</div>
+              <div class="activity-time">Yesterday, 3:45 PM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--orange-light)">🧾</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Invoice BP-2025-047-INV-001</strong> ($12,400) — 15 days overdue. Follow-up sent.</div>
+              <div class="activity-time">Yesterday, 9:00 AM</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-dot" style="background:var(--surface2)">🤝</div>
+            <div class="activity-content">
+              <div class="activity-text">Work order issued to <strong>RoadKing Paving</strong> for Clearview Medical job. Mob confirmed Apr 1.</div>
+              <div class="activity-time">Mar 27, 2:30 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Docs + Announcements -->
+      <div style="display:flex;flex-direction:column;gap:18px;">
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-title-icon">📁</span> Quick Access — OneDrive</div>
+            <a href="https://onedrive.live.com" target="_blank" class="card-action">Open OneDrive →</a>
+          </div>
+          <div class="card-body">
+            <a class="doc-item" href="#" target="_blank">
+              <div class="doc-icon" style="background:#e8f0fe">📊</div>
+              <div class="doc-info">
+                <div class="doc-name">BestPave Estimator App</div>
+                <div class="doc-meta">Modified today · In-House Tool</div>
+              </div>
+              <div class="doc-arrow">↗</div>
+            </a>
+            <a class="doc-item" href="#" target="_blank">
+              <div class="doc-icon" style="background:#e6f4ea">📋</div>
+              <div class="doc-info">
+                <div class="doc-name">Sub Roster Master File</div>
+                <div class="doc-meta">Modified Mar 27 · Excel</div>
+              </div>
+              <div class="doc-arrow">↗</div>
+            </a>
+            <a class="doc-item" href="#" target="_blank">
+              <div class="doc-icon" style="background:var(--gold-pale)">📁</div>
+              <div class="doc-info">
+                <div class="doc-name">Active Job Folders</div>
+                <div class="doc-meta">5 active · OneDrive Folder</div>
+              </div>
+              <div class="doc-arrow">↗</div>
+            </a>
+            <a class="doc-item" href="#" target="_blank">
+              <div class="doc-icon" style="background:#fce8e8">📜</div>
+              <div class="doc-info">
+                <div class="doc-name">Sub Agreement Template</div>
+                <div class="doc-meta">BestPave Standard v3 · Word</div>
+              </div>
+              <div class="doc-arrow">↗</div>
+            </a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-title-icon">📌</span> Pinned Notes</div>
+            <a href="#" class="card-action">+ Add Note</a>
+          </div>
+          <div class="card-body">
+            <div class="announcement">
+              <div class="ann-title">⚠️ Lakewood HOA — COC Needed</div>
+              <div class="ann-body">Client walk scheduled Mar 31 at 10 AM. Bring printed COC. Get signature on-site. Invoice immediately after.</div>
+              <div class="ann-date">Set by AB · Mar 28</div>
+            </div>
+            <div class="announcement" style="border-left-color:var(--blue)">
+              <div class="ann-title">🎯 Walgreens Portfolio — Estimate Due</div>
+              <div class="ann-body">Inspection complete via SpotOnSite. Estimator to complete takeoff by Apr 2. 3-location package deal.</div>
+              <div class="ann-date">Set by AB · Mar 29</div>
+            </div>
+            <div class="announcement" style="border-left-color:var(--green)">
+              <div class="ann-title">✓ CrackSeal Pro on probation</div>
+              <div class="ann-body">1 no-show recorded Mar 20. Next job must be supervised. 2 more strikes = remove from roster.</div>
+              <div class="ann-date">Set by AB · Mar 20</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Live date/time
+  function updateDate() {
+    const now = new Date();
+    const opts = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+    document.getElementById('live-date').textContent = now.toLocaleDateString('en-US', opts);
+  }
+  updateDate();
+  setInterval(updateDate, 60000);
+
+  // Sidebar active state
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      if (this.getAttribute('target') === '_blank') return;
+      e.preventDefault();
+      document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
